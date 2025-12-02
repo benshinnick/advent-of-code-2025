@@ -27,11 +27,11 @@ if __name__ == "__main__":
     file_name = get_file_name_argument()
     
     # 0 to 99
-    dial_pointer: int = 50
+    dial_pointer = 50
     # number of times dial points at 0 after each rotation
-    original_password: int = 0
+    original_password = 0
     # number of times any click causes the dial to point to 0
-    actual_password: int = 0
+    actual_password = 0
 
     for line in get_file_lines(file_name):
         # raw line example: 'L16\n'
@@ -39,11 +39,11 @@ if __name__ == "__main__":
         num_clicks = int(line.strip()[1:])
         hits = 0
 
-        if direction == "R":
+        if direction == 'R':
             hits = (dial_pointer + num_clicks) // 100
             dial_pointer = (dial_pointer + num_clicks) % 100
 
-        if direction == "L":
+        if direction == 'L':
             hits = calc_hits_for_left_rotation(num_clicks, dial_pointer)
             dial_pointer = (dial_pointer - num_clicks) % 100
 

@@ -18,33 +18,33 @@ def get_file_lines(file_path) -> List[str]:
         exit()
 
 
-def get_max_at_position(bank, start_position, num_remaining) -> tuple[int, int]:
-    max_jolts = 0
-    max_position = start_position
+def get_max_digit(bank, search_start_position, digits_remaining) -> tuple[int, int]:
+    max_digit = 0
+    max_position = search_start_position
 
-    for i in range(start_position, len(bank) - num_remaining):
-        if int(bank[i]) > max_jolts:
-            max_jolts = int(bank[i])
+    for i in range(search_start_position, len(bank) - digits_remaining):
+        if int(bank[i]) > max_digit:
+            max_digit = int(bank[i])
             max_position = i
 
-    return max_jolts, max_position
+    return max_digit, max_position
 
 
 def get_max_joltage_for_bank(bank, num_batteries) -> int:
-    max_jolts = []
+    max_digits = []
     last_max_position = -1
 
     for i in range(num_batteries):
         batteries_remaining = num_batteries - i - 1
         search_start_position = last_max_position + 1
 
-        max_at_position, last_max_position = get_max_at_position(
+        max_digit, last_max_position = get_max_digit(
             bank, search_start_position, batteries_remaining
         )
 
-        max_jolts.append(max_at_position)
+        max_digits.append(max_digit)
 
-    return int("".join(map(str, max_jolts)))
+    return int("".join(map(str, max_digits)))
 
 
 if __name__ == "__main__":

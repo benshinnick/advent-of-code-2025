@@ -9,42 +9,37 @@ def get_file_path_argument() -> str:
     raise Exception("Error: File path argument not provided.")
 
 
-def get_file_lines(file_path) -> List[str]:
+def get_battery_banks(file_path) -> List[str]:
     try:
         with open(file_path, "r") as f:
-            return f.readlines()
+            return list(map(lambda l: l.strip(), f.readlines()))
     except FileNotFoundError:
         print(f"Error: The file '{file_path}' was not found.")
         exit()
 
 
 def get_max_digit(bank, search_start_position, digits_remaining) -> tuple[int, int]:
-    max_digit = 0
-    max_position = search_start_position
+    max_digit, max_position = 0, search_start_position
 
     for i in range(search_start_position, len(bank) - digits_remaining):
         if int(bank[i]) > max_digit:
-            max_digit = int(bank[i])
-            max_position = i
+            max_digit, max_position = int(bank[i]), i
 
     return max_digit, max_position
 
 
 def get_max_joltage_for_bank(bank, num_batteries) -> int:
     max_digits = []
-    last_max_position = -1
 
     for i in range(num_batteries):
-        batteries_remaining = num_batteries - i - 1
-        search_start_position = last_max_position + 1
+        last_max_position = max_digits[i - 1][1] if i > 0 else -1
+        search_start = last_max_position + 1
+        digits_remaining = num_batteries - i - 1
 
-        max_digit, last_max_position = get_max_digit(
-            bank, search_start_position, batteries_remaining
-        )
+        max_digits.append(get_max_digit(bank, search_start, digits_remaining))
 
-        max_digits.append(max_digit)
-
-    return int("".join(map(str, max_digits)))
+    # stringify each max digit (first tuple value in max_digits) then combine and parse back into int
+    return int("".join(map(lambda m: str(m[0]), max_digits)))
 
 
 if __name__ == "__main__":
@@ -56,10 +51,7 @@ if __name__ == "__main__":
     # max numbers formed by the digits of 12 selected batteries in each bank
     overrided_max_totals = []
 
-    for line in get_file_lines(file_path):
-        # bank example: '234234234234278'
-        bank = line.strip()
-
+    for bank in get_battery_banks(file_path):
         original_max_totals.append(get_max_joltage_for_bank(bank, 2))
         overrided_max_totals.append(get_max_joltage_for_bank(bank, 12))
 

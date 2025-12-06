@@ -3,9 +3,6 @@ import sys
 from typing import List
 
 
-MAX_ADJACENT_ROLLS = 4
-
-
 def get_file_path_argument() -> str:
     if len(sys.argv) > 1:
         return sys.argv[1]
